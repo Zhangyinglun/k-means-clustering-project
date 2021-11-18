@@ -8,17 +8,19 @@ output: html_document
 ### Define function for task 1
 ```{r}
 library(plotly)
-task1 <- function(df, num_of_cluster) {
+task1 <- function(filename, num_of_cluster) {
   # read data
-  df <- read.csv(paste0(root, '/datasets/', file))[,-1]
+  df <- read.csv(paste0(root, '/datasets/', filename))[,-1]
   kmeans_temp <- kmeans(df[1:3], num_of_cluster) # exclude class, as it's technically a categorical variable
   temp <- cbind(df[1:3], cluster = kmeans_temp$cluster) ## task 1-1
   ### To-do: 1-2 using external validation metrics to evaluate cluster performance
-  print(plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
-'scatter3d', mode = 'markers')) ## task 1-3
-  print(plot_ly(temp, x = temp[,2], y = temp[,3], z = temp[,4], color = ~cluster, type =
-'scatter3d', mode = 'markers')) ## task 1-4
-  ### To-do: how to print these plots out efficiently?
+  classplot <- print(plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
+'scatter3d', mode = 'markers') %>% layout(title = paste0('Scatter plot by Class, ', filename))) ## task 1-3
+  clusterplot <- print(plot_ly(temp, x = temp[,2], y = temp[,3], z = temp[,4], color = ~cluster, type =
+'scatter3d', mode = 'markers') %>% layout(title = paste0('Scatter plot by Cluster, ', filename))) ## task 1-4
+  ### To-do: how to print these plots out efficiently for the sake of this assignment?
+  ## 1. save them in a separate file using pdf()/dev.off()?
+  ## 2. display them here using print()? it looks extremely confusing. Maybe use titles or is there a better way?
   
 }
 ```
@@ -41,8 +43,8 @@ df <- read.csv('datasets/Data1.csv')[,-1] # the first column of all datasets is 
 kmeans_temp <- kmeans(df[1:3], 5)
 temp <- cbind(df[1:3], cluster = kmeans_temp$cluster)
 ### class plot
-plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
-'scatter3d', mode = 'markers')
+classplot <- print(plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
+'scatter3d', mode = 'markers') %>% layout(title = 'Scatter plot by Class,.csv'))
 ### cluster plot
 plot_ly(temp, x = temp[,1], y = temp[,2], z = temp[,3], color = ~cluster, type =
 'scatter3d', mode = 'markers')
