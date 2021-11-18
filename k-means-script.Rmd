@@ -1,0 +1,49 @@
+---
+title: "kmeans clustering project-group 8"
+output: html_document
+---
+
+### Authors: Group 8 - Lin Bai, Shanshan Lin, Yinglun Zhang 
+
+### Define function for task 1
+```{r}
+library(plotly)
+task1 <- function(df, num_of_cluster) {
+  # read data
+  df <- read.csv(paste0(root, '/datasets/', file))[,-1]
+  kmeans_temp <- kmeans(df, num_of_cluster) 
+  temp <- cbind(df, cluster = kmeans_temp$cluster) ## task 1-1
+  ### To-do: 1-2 using external validation metrics to evaluate cluster performance
+  print(plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
+'scatter3d', mode = 'markers')) ## task 1-3
+  print(plot_ly(temp, x = temp[,2], y = temp[,3], z = temp[,4], color = ~cluster, type =
+'scatter3d', mode = 'markers')) ## task 1-4
+  ### To-do: how to print these plots out efficiently?
+  
+}
+```
+
+### call the task 1 function
+```{r}
+library('rstudioapi')
+root <- paste0(dirname(rstudioapi::getSourceEditorContext()$path)) # This line gets your working directory automatically. This is so that this will run when we test this in github. Delete it or whatever when we submit.
+files <- list.files(paste0(root, '/datasets'), pattern = "*.csv") # automatically gets all .csv files
+data_files <- files[-length(files)] # exclude 'World Indicators.csv'. Should not be running k-means on that for task1.
+for (file in data_files){
+  print(file)
+  results <- task1(file, 5)
+}
+```
+
+### sample of what this function above does, for debugging purposes
+```{r}
+df <- read.csv('datasets/Data1.csv')[,-1] # the first column of all datasets is some useless index thing
+kmeans_temp <- kmeans(df, 5)
+temp <- cbind(df, cluster = kmeans_temp$cluster)
+### class plot
+plot_ly(df, x = df[,1], y = df[,2], z = df[,3], color = ~Class, type =
+'scatter3d', mode = 'markers')
+### cluster plot
+plot_ly(temp, x = temp[,1], y = temp[,2], z = temp[,3], color = ~cluster, type =
+'scatter3d', mode = 'markers')
+```
