@@ -1,0 +1,213 @@
+---
+title: "Project1"
+author: "Group 8"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+## Prepare
+```{r}
+library(clValid)
+library(factoextra)
+library(ClusterR)
+```
+
+## Task1-Data1
+
+Read data
+```{r}
+df=read.csv('Data1.csv')
+df_scale=scale(df[2:4])
+```
+
+Use kmeans
+```{r}
+fviz_nbclust(df_scale,kmeans,method = "wss")+labs(subtitle = "X")
+km <- kmeans(df_scale,centers=7,nstart=100)
+```
+
+Kmeans external validation result
+```{r}
+km.clusters <- km$cluster
+df <- cbind(df, Cluster = km.clusters)
+result=external_validation(df$Class, df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Use hierarchical clustering
+```{r}
+df_dist=dist(df_scale)
+hclust_avg <- hclust(df_dist, method = 'average')
+cut_avg <- cutree(hclust_avg, k = 7)
+```
+
+Hierarchical clustering external validation result
+```{r}
+cut_df <- cbind(df, Cluster = cut_avg)
+result=external_validation(cut_df$Class, cut_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Plot original class data
+```{r}
+fviz_cluster(list(data = df,cluster = df$Class))
+```
+
+Plot data allocated by kmeans
+```{r}
+fviz_cluster(list(data = df,cluster = km.clusters))
+```
+
+Plot data allocated by hierarchical clustering
+```{r}
+fviz_cluster(list(data = df,cluster = cut_avg))
+```
+
+## Task1-Data2
+
+Read data
+```{r}
+df2=read.csv('Data2.csv')[2:5]
+df2_scale=distance(df2[1:3])
+df2_dist=dist(df2[1:3])
+```
+
+Use kmeans
+```{r}
+fviz_nbclust(df2_scale,kmeans,method = "wss")+labs(subtitle = "X")
+km <- kmeans(df2,centers=3, nstart = 100)
+km.clusters <- km$cluster
+```
+
+Kmeans external validation result
+```{r}
+km_df <- cbind(df2, Cluster = km.clusters)
+result=external_validation(km_df$Class, km_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Use hierarchical clustering
+```{r}
+hclust_avg <- hclust(df2_dist, method = 'centroid')
+cut_avg <- cutree(hclust_avg, k = 4)
+```
+
+Hierarchical clustering external validation result
+```{r}
+cut_df <- cbind(df2, Cluster = cut_avg)
+result=external_validation(cut_df$Class, cut_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Plot original class data
+```{r}
+fviz_cluster(list(data = df2,cluster = df2$Class))
+```
+
+Plot data allocated by kmeans
+```{r}
+fviz_cluster(list(data = df2,cluster = km.clusters))
+```
+
+Plot data allocated by hierarchical clustering
+```{r}
+fviz_cluster(list(data = df2,cluster = cut_avg))
+```
+
+## Task1-Data3
+
+Read data
+```{r}
+df3=read.csv('Data3.csv')[2:5]
+df3_scale=scale(df3[1:3])
+df3_dist=dist(df3[1:3])
+```
+
+Use kmeans
+```{r}
+fviz_nbclust(df3_scale,kmeans,method = "wss")+labs(subtitle = "X")
+km <- kmeans(df3_scale,centers=4)
+km.clusters <- km$cluster
+```
+
+Kmeans external validation result
+```{r}
+km_df <- cbind(df3, Cluster = km.clusters)
+result=external_validation(km_df$Class, km_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Use hierarchical clustering
+```{r}
+hclust_avg <- hclust(df3_dist, method = 'average')
+cut_avg <- cutree(hclust_avg, k = 4)
+```
+
+Hierarchical clustering external validation result
+```{r}
+cut_df <- cbind(df3, Cluster = cut_avg)
+result=external_validation(cut_df$Class, cut_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Plot original class data
+```{r}
+fviz_cluster(list(data = df3,cluster = df3$Class))
+```
+
+Plot data allocated by kmeans
+```{r}
+fviz_cluster(list(data = df3,cluster = km.clusters))
+```
+
+Plot data allocated by hierarchical clustering
+```{r}
+fviz_cluster(list(data = df3,cluster = cut_avg))
+```
+
+## Task1-Data4
+
+Read data
+```{r}
+df=read.csv('Data4.csv')
+df_scale=scale(df[2:4])
+```
+Use kmeans
+```{r}
+fviz_nbclust(df_scale,kmeans,method = "wss")+labs(subtitle = "X")
+km <- kmeans(df_scale,centers=2,nstart=100)
+```
+Kmeans external validation result
+```{r}
+km.clusters <- km$cluster
+df <- cbind(df, Cluster = km.clusters)
+result=external_validation(df$Class, df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+Use hierarchical clustering
+```{r}
+df_dist=dist(df)
+hclust_avg <- hclust(df_dist, method = 'median')
+cut_avg <- cutree(hclust_avg,2)
+```
+Hierarchical clustering external validation result
+```{r}
+cut_df <- cbind(df, Cluster = cut_avg)
+result=external_validation(cut_df$Class, cut_df$Cluster, method = "jaccard_index")
+print(paste("External validation result =",result))
+```
+
+Plot original class data
+```{r}
+fviz_cluster(list(data = df[2:4],cluster = df$Class))
+```
+Plot data allocated by kmeans
+```{r}
+fviz_cluster(list(data = df[2:4],cluster = km.clusters))
+```
+Plot data allocated by hierarchical clustering
+```{r}
+fviz_cluster(list(data = df[2:4],cluster = cut_avg))
+```
